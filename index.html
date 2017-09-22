@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <link rel="stylesheet" href="css/style.css">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="js\app.js"></script>
+      <script src="knockout-3.4.2.js"></script>
+      <script src="jquery.min.js"></script>
+      <script async defer
+         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBH2PxSNtHPZgDrXmEiKI4ykigyqHHAmPg&v=3&callback=initializeMap" onerror="googleError()"></script>
+   </head>
+   <body>
+      <button class="button" onclick="sidebar_open()">Search</button>
+      <div class="sidebar border-right" style="display:none" id="mySidebar">
+         <button onclick="sidebar_close()" class="large">Close</button>
+         <div class="options-box">
+            <select data-bind="options:listofplaces , optionsText:'title',
+               value:selectedPlace, event: {change: selecctionchangeevent} ,
+               optionsCaption: 'Choose..'"></select>
+            <h1>Places</h1>
+            <!--ko ifnot: selectedPlace-->
+            <ul class="sidebar-nav" id="side_bar" data-bind="foreach: listofplaces">
+               <li tabindex="1" data-bind="text: title,
+                  click: $parent.itemClicked.bind($data, $index())">
+               </li>
+            </ul>
+            <!--/ko -->
+            <!--ko if: selectedPlace-->
+            <span data-bind= "text: selectedPlace().title"></span>
+            <!--/ko -->
+         </div>
+      </div>
+      <div id="map">
+      </div>
+   </body>
+</html>
