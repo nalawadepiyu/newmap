@@ -1,36 +1,37 @@
-var map;
-var listofmarkers = [];
-var places = [{
-    title: 'Hayward Bart',
-    location: {
-        lat: 37.6697,
-        lng: -122.0870
-    }
-}, {
-    title: 'Fremont Bart',
-    location: {
-        lat: 37.5575,
-        lng: -121.9766
-    }
-}, {
-    title: 'Montgomery Bart',
-    location: {
-        lat: 37.7894,
-        lng: -122.4011
-    }
-}, {
-    title: 'Daly City',
-    location: {
-        lat: 37.687923,
-        lng: -122.470207
-    }
-}, {
-    title: 'North Berekely',
-    location: {
-        lat: 37.871853,
-        lng: -122.258423
-    }
-}, ];
+var map,
+    infowindow,
+    listofmarkers = [],
+    places = [{
+        title: 'Hayward Bart',
+        location: {
+            lat: 37.6697,
+            lng: -122.0870
+        }
+    }, {
+        title: 'Fremont Bart',
+        location: {
+            lat: 37.5575,
+            lng: -121.9766
+        }
+    }, {
+        title: 'Montgomery Bart',
+        location: {
+            lat: 37.7894,
+            lng: -122.4011
+        }
+    }, {
+        title: 'Daly City',
+        location: {
+            lat: 37.687923,
+            lng: -122.470207
+        }
+    }, {
+        title: 'North Berekely',
+        location: {
+            lat: 37.871853,
+            lng: -122.258423
+        }
+    }];
 
 function initializeMap() {
     var latlng = new google.maps.LatLng(39.305, -76.617);
@@ -38,11 +39,14 @@ function initializeMap() {
         center: latlng,
         zoom: 30
     });
+
+    infowindow = new google.maps.InfoWindow();
+
     var bounds = new google.maps.LatLngBounds();
 
-    for (var i = 0; i < places.length; i++) {
-        var position = places[i].location;
-        var title = places[i].title;
+    places.forEach(function(place, i) {
+        var position = place.location;
+        var title = place.title;
         var marker = new google.maps.Marker({
             map: map,
             position: position,
@@ -50,13 +54,14 @@ function initializeMap() {
             id: i
         });
         listofmarkers.push(marker);
-        places[i].marker = marker;
+        place.marker = marker;
         var infowindow = new google.maps.InfoWindow();
         marker.addListener('click', function() {
             openInfowindow(this, infowindow);
         });
         bounds.extend(listofmarkers[i].position);
-    }
+    });
+
     map.fitBounds(bounds);
     var viewmodel = function() {
         this.listofplaces = ko.observableArray(places);
@@ -113,8 +118,7 @@ function openInfowindow(marker, infowindow) {
             success: function(response) {
                 var articlelist = response[1];
                 $wikiElem = $("#wikiElem");
-                for (var i = 0; i < articlelist.length; i++)
-                {
+                for (var i = 0; i < articlelist.length; i++) {
                     articlestr = articlelist[i];
                     var url = 'http://en.wikipedia.org/wiki/' + articlestr;
                     $wikiElem.append('<li><a href="' + url + '">' +
@@ -123,12 +127,4 @@ function openInfowindow(marker, infowindow) {
             }
         });
     }
-}
-
-function sidebar_open() {
-    document.getElementById("mySidebar").style.display = "block";
-}
-
-function sidebar_close() {
-    document.getElementById("mySidebar").style.display = "none";
 }
