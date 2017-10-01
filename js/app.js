@@ -55,7 +55,6 @@ function initializeMap() {
         });
         listofmarkers.push(marker);
         place.marker = marker;
-        var infowindow = new google.maps.InfoWindow();
         marker.addListener('click', function() {
             openInfowindow(this, infowindow);
         });
@@ -68,22 +67,31 @@ function initializeMap() {
         this.selectedPlace = ko.observable();
         this.selecctionchangeevent = function() {
             var select = this.selectedPlace();
-            console.log(this.selectedPlace());
+
             if (select) {
                 clear();
                 select.marker.setVisible(true);
+                select.marker.setAnimation(google.maps.Animation.BOUNCE)
                 openInfowindow(select.marker, infowindow);
             } else {
+
                 for (var i = 0; i < places.length; i++) {
-                    places[i].marker.setVisible(false);
+                    places[i].marker.setVisible(true);
                 }
             }
         };
 
-        this.itemClicked = function(index) {
+
+        this.itemClicked = function set(index) {
             var selectedmarker = places[index].marker;
+            //selectedmarker.setAnimation(google.maps.Animation.BOUNCE);
             openInfowindow(selectedmarker, infowindow);
+
         };
+
+
+
+
     };
 
     ko.applyBindings(new viewmodel());
@@ -108,8 +116,8 @@ function openInfowindow(marker, infowindow) {
         infowindow.open(map, marker);
         marker.addListener('click', function() {
             map.setCenter(marker.getPosition());
-            marker.setAnimation(google.maps.Animation.BOUNCE);
             openInfowindow(marker, infowindow);
+            marker.setAnimation(google.maps.Animation.BOUNCE);
         });
 
         $.ajax({
@@ -127,4 +135,12 @@ function openInfowindow(marker, infowindow) {
             }
         });
     }
+}
+
+function sidebar_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+
+function sidebar_close() {
+    document.getElementById("mySidebar").style.display = "none";
 }
